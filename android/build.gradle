@@ -1,0 +1,60 @@
+// android/build.gradle
+// Root Gradle build file for the Kurikku Android project.
+// Configures repositories and dependencies for all subprojects.
+
+buildscript {
+
+    ext {
+        // ── SDK Versions ──────────────────────────────────────
+        compileSdkVersion   = 34
+        targetSdkVersion    = 34
+        minSdkVersion       = 26      // Android 8.0 minimum
+
+        // ── Kotlin ────────────────────────────────────────────
+        kotlinVersion       = "1.9.22"
+
+        // ── Build Tools ───────────────────────────────────────
+        buildToolsVersion   = "34.0.0"
+
+        // ── React Native ──────────────────────────────────────
+        // Loaded from node_modules — do not change manually
+        REACT_NATIVE_VERSION = "0.73.6"
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        // Android Gradle Plugin
+        classpath("com.android.tools.build:gradle:8.2.2")
+
+        // Kotlin Gradle Plugin
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+    }
+}
+
+// ── All projects repository config ────────────────────────
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+        // React Native packages from node_modules
+        maven {
+            url = uri("$rootDir/../node_modules/react-native/android")
+        }
+
+        // React Native JSC (JavaScript engine)
+        maven {
+            url = uri("$rootDir/../node_modules/jsc-android/dist")
+        }
+    }
+}
+
+// ── Clean task ────────────────────────────────────────────
+tasks.register("clean", Delete::class) {
+    // Deletes the root build directory on ./gradlew clean
+    delete(rootProject.layout.buildDirectory)
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Kurikku",
+  "displayName": "Kurikku",
+  "version": "1.0.0",
+  "buildNumber": 1,
+  "description": "Lightweight Auto Clicker for Android",
+  "author": "TimedCoder",
+  "license": "MIT",
+  "android": {
+    "package": "com.kurikku",
+    "versionCode": 1,
+    "versionName": "1.0.0",
+    "compileSdkVersion": 34,
+    "targetSdkVersion": 34,
+    "minSdkVersion": 26,
+    "permissions": [
+      "SYSTEM_ALERT_WINDOW",
+      "FOREGROUND_SERVICE",
+      "VIBRATE",
+      "RECEIVE_BOOT_COMPLETED"
+    ]
+  }
+}

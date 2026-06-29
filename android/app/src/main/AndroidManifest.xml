@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AndroidManifest.xml
+    Declares all permissions, activities, services, and receivers
+    required by Kurikku. Every Android component must be registered here.
+-->
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kurikku">
+
+    <!-- ── Permissions ──────────────────────────────────────── -->
+
+    <!--
+        SYSTEM_ALERT_WINDOW:
+        Required to draw the floating bubble over other apps.
+        On Android 6.0+ the user must grant this manually in Settings.
+    -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!--
+        FOREGROUND_SERVICE:
+        Required to keep the auto clicker running in the background
+        via a foreground service with a persistent notification.
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!--
+        FOREGROUND_SERVICE_ACCESSIBILITY:
+        Required on Android 14+ when a foreground service is connected
+        to an AccessibilityService.
+    -->
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_ACCESSIBILITY" />
+
+    <!--
+        VIBRATE:
+        Optional — used for haptic feedback when clicking starts or stops.
+    -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!--
+        RECEIVE_BOOT_COMPLETED:
+        Optional — allows restoring the bubble on device reboot.
+        Remove if boot-on-start feature is not needed.
+    -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- ── Application ──────────────────────────────────────── -->
+    <application
+        android:name=".MainApplication"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:theme="@style/AppTheme"
+        android:supportsRtl="true">
+
+        <!-- ── Main Activity ──────────────────────────────── -->
+        <!--
+            The single Activity that hosts the React Native UI.
+            launchMode singleTask ensures only one instance runs.
+            Exported true so Android can launch it from the launcher.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ── Accessibility Service ──────────────────────── -->
+        <!--
+            KurikkuAccessibilityService performs screen tap gestures.
+            permission: BIND_ACCESSIBILITY_SERVICE ensures only Android
+            system can bind to this service.
+            meta-data points to our accessibility_service_config.xml.
+        -->
+        <service
+            android:name=".accessibility.KurikkuAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- ── Floating Bubble Service ────────────────────── -->
+        <!--
+            FloatingBubbleService manages the overlay window.
+            Runs as a foreground service to stay alive in the background.
+            Not exported — only started internally by the app.
+        -->
+        <service
+            android:name=".overlay.FloatingBubbleService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false" />
+
+        <!-- ── Boot Receiver ──────────────────────────────── -->
+        <!--
+            Optional: restores the bubble after device reboot.
+            Remove this block if boot-on-start is not required.
+        -->
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

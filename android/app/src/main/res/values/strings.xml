@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    strings.xml
+    All string resources for the Kurikku Android app.
+    Referenced from AndroidManifest.xml and accessibility_service_config.xml.
+    Keep all user-facing text here — never hardcode strings in Kotlin files.
+-->
+<resources>
+
+    <!-- App name shown on home screen and in app drawer -->
+    <string name="app_name">Kurikku</string>
+
+    <!-- Shown in the Android Accessibility Settings screen
+         under the Kurikku service entry.
+         Must clearly describe what the service does. -->
+    <string name="accessibility_service_description">
+        Kurikku uses the Accessibility Service to simulate
+        screen taps at a position you choose. This is used
+        for automation, accessibility assistance, and testing
+        inside apps that allow it. Kurikku does not read any
+        screen content or collect any data.
+    </string>
+
+    <!-- Notification channel name shown in Android system settings -->
+    <string name="notification_channel_name">Kurikku Auto Clicker</string>
+
+    <!-- Notification channel description -->
+    <string name="notification_channel_description">
+        Shows while Kurikku auto clicker is running in the background.
+    </string>
+
+    <!-- Foreground service notification title -->
+    <string name="notification_title">Kurikku is running</string>
+
+    <!-- Foreground service notification body text -->
+    <string name="notification_text">Auto clicker is active. Tap to open.</string>
+
+    <!-- Floating bubble content description for accessibility -->
+    <string name="bubble_content_description">Kurikku floating bubble</string>
+
+    <!-- Permission dialog strings -->
+    <string name="overlay_permission_title">Overlay Permission Required</string>
+    <string name="overlay_permission_message">
+        Kurikku needs permission to draw over other apps
+        to show the floating bubble.
+    </string>
+
+    <string name="accessibility_permission_title">Accessibility Service Required</string>
+    <string name="accessibility_permission_message">
+        Kurikku needs the Accessibility Service enabled
+        to simulate screen taps.
+    </string>
+
+    <!-- Generic button labels -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_open_settings">Open Settings</string>
+
+</resources>

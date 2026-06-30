@@ -1,0 +1,7 @@
+// android/settings.gradle
+// Tells Gradle which modules belong to this project
+
+rootProject.name = 'Kurikku'
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
+include ':app'

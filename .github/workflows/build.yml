@@ -30,14 +30,13 @@ jobs:
           npm install @react-native-community/slider
           npm install @react-native-async-storage/async-storage
 
-      - name: Generate Gradle Wrapper (React Native compatible)
+      - name: Generate Gradle Wrapper
         run: |
           cd android
-          curl -L https://raw.githubusercontent.com/facebook/react-native/v0.73.6/template/android/gradlew -o gradlew
-          curl -L https://raw.githubusercontent.com/facebook/react-native/v0.73.6/template/android/gradlew.bat -o gradlew.bat
-          mkdir -p gradle/wrapper
-          curl -L https://raw.githubusercontent.com/facebook/react-native/v0.73.6/template/android/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
-          curl -L https://raw.githubusercontent.com/facebook/react-native/v0.73.6/template/android/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+          curl -sL https://services.gradle.org/distributions/gradle-8.6-bin.zip -o gradle.zip
+          unzip -q gradle.zip
+          ./gradle-8.6/bin/gradle wrapper --gradle-version 8.6
+          rm -rf gradle.zip gradle-8.6
           chmod +x gradlew
 
       - name: Create local.properties

@@ -54,7 +54,7 @@ allprojects {
 }
 
 // ── Clean task ────────────────────────────────────────────
-tasks.register("clean", Delete::class) {
+tasks.register("clean", Delete) {
     // Deletes the root build directory on ./gradlew clean
-    delete(rootProject.layout.buildDirectory)
+    delete rootProject.layout.buildDirectory
 }

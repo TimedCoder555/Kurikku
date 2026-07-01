@@ -1,25 +1,12 @@
 // android/build.gradle
-
 buildscript {
-
-    ext {
-        compileSdkVersion  = 34
-        targetSdkVersion   = 34
-        minSdkVersion      = 26
-        kotlinVersion      = "1.9.22"
-        buildToolsVersion  = "34.0.0"
-    }
-
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath("com.android.tools.build:gradle:8.2.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-        // DO NOT add react-native-gradle-plugin here
-        // RN 0.73 loads it via pluginManagement in settings.gradle
+        classpath "com.android.tools.build:gradle:8.2.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
     }
 }
 
@@ -27,6 +14,15 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://www.jitpack.io" }
+
+        // React Native AAR files from node_modules
+        maven {
+            url "$rootDir/../node_modules/react-native/android"
+        }
+        maven {
+            url "$rootDir/../node_modules/jsc-android/dist"
+        }
     }
 }
 

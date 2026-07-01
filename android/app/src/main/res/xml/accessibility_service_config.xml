@@ -1,60 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    accessibility_service_config.xml
-    Configures the KurikkuAccessibilityService for Android.
-    This file is referenced in AndroidManifest.xml via meta-data.
-    It tells Android what events and capabilities the service needs.
--->
 <accessibility-service
     xmlns:android="http://schemas.android.com/apk/res/android"
-
-    <!--
-        accessibilityEventTypes:
-        We only need typeAllMask to stay active.
-        The service does not actually listen to UI events —
-        it only uses performGlobalAction to simulate taps.
-    -->
     android:accessibilityEventTypes="typeAllMask"
-
-    <!--
-        accessibilityFeedbackType:
-        feedbackGeneric — we do not provide spoken or visual feedback.
-        Required field, so we use the most minimal option.
-    -->
     android:accessibilityFeedbackType="feedbackGeneric"
-
-    <!--
-        canPerformGestures:
-        true — required to simulate tap gestures on screen
-        using dispatchGesture() inside the service.
-    -->
     android:canPerformGestures="true"
-
-    <!--
-        accessibilityFlags:
-        flagDefault — no special flags needed.
-        We do not need to retrieve window content or input events.
-    -->
     android:accessibilityFlags="flagDefault"
-
-    <!--
-        notificationTimeout:
-        Minimum interval (ms) between accessibility event callbacks.
-        100ms is safe and low overhead since we ignore these events anyway.
-    -->
     android:notificationTimeout="100"
-
-    <!--
-        description:
-        Shown to the user on the Accessibility Settings screen.
-        Must clearly explain what the service does.
-        References the string defined in res/values/strings.xml.
-    -->
     android:description="@string/accessibility_service_description"
-
-    <!--
-        settingsActivity:
-        Points back to the main app activity so the user can
-        open Kurikku settings directly from Accessibility Settings.
-    -->
     android:settingsActivity="com.kurikku.MainActivity" />

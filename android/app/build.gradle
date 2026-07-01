@@ -1,72 +1,54 @@
 // android/app/build.gradle
 // App-level Gradle build file for Kurikku.
-// Configures Android build settings, dependencies, and signing.
+// Fixed: removed broken apply from path, using correct RN 0.73 plugin approach
 
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
-
-// Load React Native Gradle plugin from node_modules
-apply from: file("../../node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build.gradle.kts")
+apply plugin: "com.facebook.react"
 
 android {
 
-    // Must match package in AndroidManifest.xml and app.json
-    namespace = "com.kurikku"
+    namespace "com.kurikku"
 
-    compileSdk = rootProject.ext.compileSdkVersion
-    buildToolsVersion = rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-    // ── Default Config ────────────────────────────────────────
     defaultConfig {
-        applicationId  = "com.kurikku"
-        minSdk         = rootProject.ext.minSdkVersion
-        targetSdk      = rootProject.ext.targetSdkVersion
-        versionCode    = 1
-        versionName    = "1.0.0"
+        applicationId "com.kurikku"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
 
-        // Required for React Native
-        buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false")
-        buildConfigField("boolean", "IS_HERMES_ENABLED", "true")
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
+        buildConfigField "boolean", "IS_HERMES_ENABLED", "true"
     }
 
-    // ── Signing Config ────────────────────────────────────────
     signingConfigs {
         debug {
-            // Default debug keystore — safe for development
-            storeFile     file("debug.keystore")
+            storeFile file("debug.keystore")
             storePassword "android"
-            keyAlias      "androiddebugkey"
-            keyPassword   "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
         }
-        // Release signing — configure before publishing to Play Store
-        // release {
-        //     storeFile     file(RELEASE_STORE_FILE)
-        //     storePassword RELEASE_STORE_PASSWORD
-        //     keyAlias      RELEASE_KEY_ALIAS
-        //     keyPassword   RELEASE_KEY_PASSWORD
-        // }
     }
 
-    // ── Build Types ───────────────────────────────────────────
     buildTypes {
         debug {
-            signingConfig     signingConfigs.debug
-            debuggable        true
-            minifyEnabled     false
-            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
+            debuggable true
+            minifyEnabled false
         }
         release {
-            signingConfig     signingConfigs.debug  // Replace with release config
-            minifyEnabled     true
-            shrinkResources   true
+            signingConfig signingConfigs.debug
+            minifyEnabled false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
 
-    // ── Compile Options ───────────────────────────────────────
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -76,60 +58,33 @@ android {
         jvmTarget = "17"
     }
 
-    // ── Build Features ────────────────────────────────────────
     buildFeatures {
-        buildConfig = true
+        buildConfig true
     }
 
-    // ── Source Sets ───────────────────────────────────────────
-    sourceSets {
-        main {
-            // React Native JS bundle location
-            assets.srcDirs = ["src/main/assets"]
-            // Native sources
-            java.srcDirs   = ["src/main/java"]
-            res.srcDirs    = ["src/main/res"]
-        }
-    }
-
-    // ── Packaging ─────────────────────────────────────────────
     packaging {
         resources {
-            // Exclude duplicate META-INF files that cause build errors
             excludes += [
                 "META-INF/DEPENDENCIES",
                 "META-INF/LICENSE",
                 "META-INF/LICENSE.txt",
                 "META-INF/NOTICE",
-                "META-INF/NOTICE.txt",
+                "META-INF/NOTICE.txt"
             ]
         }
     }
 }
 
-// ── Dependencies ──────────────────────────────────────────
 dependencies {
-
-    // ── React Native ──────────────────────────────────────────
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:hermes-android")
 
-    // ── Kotlin Standard Library ───────────────────────────────
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.ext.kotlinVersion}")
-
-    // ── AndroidX Core ─────────────────────────────────────────
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-
-    // ── Foreground Service Notification ───────────────────────
-    implementation("androidx.core:core:1.12.0")
 }
 
-// ── React Native config ───────────────────────────────────
 react {
-    // JS bundle entry point
     entryFile = file("../../index.js")
-
-    // Enable Hermes JS engine (faster startup, lower memory)
     hermesEnabled = true
 }

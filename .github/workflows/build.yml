@@ -1,55 +1,28 @@
-name: Build Kurikku APK
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
-
-      - name: Install dependencies
-        run: |
-          npm install
-          npm install --save-dev babel-plugin-module-resolver
-          npm install @react-native-community/slider
-          npm install @react-native-async-storage/async-storage
-
-      - name: Generate Gradle Wrapper
+- name: Generate Gradle Wrapper
         run: |
           cd android
+
+          # Temporarily use a minimal settings.gradle for wrapper generation
+          # (node_modules not available during wrapper init)
+          cat > settings.gradle << 'EOF'
+          rootProject.name = 'Kurikku'
+          include ':app'
+          EOF
+
+          # Download Gradle and generate wrapper
           curl -sL https://services.gradle.org/distributions/gradle-8.6-bin.zip -o gradle.zip
           unzip -q gradle.zip
           ./gradle-8.6/bin/gradle wrapper --gradle-version 8.6
           rm -rf gradle.zip gradle-8.6
           chmod +x gradlew
 
-      - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-
-      - name: Build Debug APK
-        run: |
-          cd android
-          ./gradlew assembleDebug --no-daemon --stacktrace
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Kurikku-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          # Restore the full settings.gradle with React Native plugin
+          cat > settings.gradle << 'EOF'
+          pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+          plugins { id("com.facebook.react.settings") }
+          extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+              ex.autolinkLibrariesFromCommand()
+          }
+          rootProject.name = 'Kurikku'
+          include ':app'
+          EOF

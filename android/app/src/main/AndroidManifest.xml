@@ -5,8 +5,8 @@
     required by Kurikku. Every Android component must be registered here.
 -->
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kurikku">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
 
     <!-- ── Permissions ──────────────────────────────────────── -->
 

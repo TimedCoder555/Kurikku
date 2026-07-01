@@ -65,6 +65,21 @@ jobs:
             -keypass android \
             -dname "CN=Android Debug,O=Android,C=US"
 
+      - name: Generate placeholder app icons
+        run: |
+          sudo apt-get install -y imagemagick
+          for size in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
+            density=$(echo $size | cut -d: -f1)
+            px=$(echo $size | cut -d: -f2)
+            mkdir -p android/app/src/main/res/mipmap-$density
+            convert -size ${px}x${px} xc:#2196F3 \
+              -fill white -gravity center \
+              -pointsize $((px/3)) -annotate 0 "K" \
+              android/app/src/main/res/mipmap-$density/ic_launcher.png
+            cp android/app/src/main/res/mipmap-$density/ic_launcher.png \
+               android/app/src/main/res/mipmap-$density/ic_launcher_round.png
+          done
+
       - name: Build Debug APK
         run: |
           cd android

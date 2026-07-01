@@ -33,7 +33,6 @@ jobs:
       - name: Generate Gradle Wrapper
         run: |
           mkdir -p android/gradle/wrapper
-
           cat > android/gradle/wrapper/gradle-wrapper.properties << 'EOF'
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
@@ -43,17 +42,28 @@ jobs:
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dists
           EOF
-
           curl -sL https://raw.githubusercontent.com/gradle/gradle/v8.6.0/gradlew \
             -o android/gradlew
           chmod +x android/gradlew
-
           curl -sL https://github.com/gradle/gradle/raw/v8.6.0/gradle/wrapper/gradle-wrapper.jar \
             -o android/gradle/wrapper/gradle-wrapper.jar
 
       - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+      - name: Generate debug keystore
+        run: |
+          cd android/app
+          keytool -genkeypair -v \
+            -keystore debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Build Debug APK
         run: |
